@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ============ Дизайн-токены Nebula (ТЗ §5, источник: ../design/tokens.css) ============ */
+@theme {
+  --color-ink: #0d0a22;
+  --color-ink2: #1e1a4a;
+  --color-paper: #f6f8fc;
+  --color-body: #14112e;
+  /* темнее, чем --muted из брендборда (#64748B): контраст ≥4.5:1 на --paper (WCAG AA, ТЗ §11) */
+  --color-mutedc: #475569;
+  --color-line: #e6e9f2;
+  --color-subtle: #b7b3d8;
+
+  --color-primary: #6366f1;
+  --color-primary-l: #a5b4fc;
+  --color-primary-d: #4338ca;
+  --color-magenta: #ec4899;
+  --color-magenta-l: #f472b6;
+  --color-cyanb: #22d3ee;
+  --color-cyanb-l: #67e8f9;
+
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-error: #dc2626;
+
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 16px;
+  --shadow-card: 0 12px 40px rgba(13, 10, 34, 0.1);
+}
+
+/* ============ база ============ */
+body {
+  background: var(--color-ink);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.12;
+  text-wrap: balance;
+  font-weight: 600;
+}
+
+.container-site {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(24px, 6vw, 80px);
+}
+
+.section-y { padding-block: clamp(72px, 10vw, 128px); }
+
+/* ============ компоненты ============ */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-cyanb);
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+.eyebrow::before { content: ""; width: 22px; height: 1px; background: currentColor; }
+.light .eyebrow { color: var(--color-primary-d); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15.5px;
+  padding: 15px 30px;
+  border-radius: 999px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.btn:focus-visible { outline: 2px solid var(--color-cyanb); outline-offset: 3px; }
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(120, 80, 220, 0.35);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(150, 80, 220, 0.5); }
+.btn-secondary { border: 1.5px solid rgba(165, 180, 252, 0.4); color: #fff; }
+.btn-secondary:hover { border-color: var(--color-primary-l); box-shadow: 0 0 48px rgba(99, 102, 241, 0.35); }
+.light .btn-secondary { color: var(--color-primary-d); border-color: rgba(99, 102, 241, 0.45); }
+.btn-sm { padding: 11px 22px; font-size: 14px; }
+
+.card-n {
+  background: linear-gradient(180deg, rgba(30, 26, 74, 0.75), rgba(30, 26, 74, 0.35));
+  border: 1px solid rgba(165, 180, 252, 0.14);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.card-n:hover { transform: translateY(-6px); }
+.card-n[data-glow="indigo"]:hover { border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 0 48px rgba(99, 102, 241, 0.35); }
+.card-n[data-glow="cyan"]:hover { border-color: rgba(34, 211, 238, 0.5); box-shadow: 0 0 48px rgba(34, 211, 238, 0.28); }
+.card-n[data-glow="magenta"]:hover { border-color: rgba(236, 72, 153, 0.5); box-shadow: 0 0 48px rgba(236, 72, 153, 0.3); }
+.light .card-n { background: #fff; border-color: var(--color-line); box-shadow: var(--shadow-card); }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(165, 180, 252, 0.3);
+  color: var(--color-primary-l);
+  white-space: nowrap;
+}
+.light .tag { color: var(--color-primary-d); border-color: rgba(99, 102, 241, 0.3); }
+
+.grad-text {
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* светлые секции «сэндвича» */
+.light { background: var(--color-paper); color: var(--color-body); }
+
+/* инпуты форм */
+.field {
+  width: 100%;
+  border: 1px solid rgba(165, 180, 252, 0.25);
+  background: rgba(30, 26, 74, 0.4);
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 15px;
+  color: #fff;
+}
+.field::placeholder { color: var(--color-subtle); }
+.field:focus { outline: 2px solid var(--color-primary); outline-offset: 0; border-color: transparent; }
+.field[aria-invalid="true"] { border-color: var(--color-error); }
+
+/* логобар */
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ============ типографика статьи (MDX, ТЗ §4.5) ============ */
+.prose-aivo { font-size: 17.5px; line-height: 1.7; }
+.prose-aivo h2 {
+  font-size: 28px;
+  margin: 44px 0 16px;
+  scroll-margin-top: 96px;
+}
+.prose-aivo p { margin: 0 0 18px; }
+.prose-aivo a:not(.btn) {
+  color: var(--color-primary-d);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-aivo ul, .prose-aivo ol { margin: 0 0 18px; padding-left: 24px; }
+.prose-aivo li { margin-bottom: 8px; }
+.prose-aivo blockquote {
+  border-left: 3px solid var(--color-primary-l);
+  margin: 0 0 18px;
+  padding: 4px 0 4px 20px;
+  color: var(--color-mutedc);
+}
+.prose-aivo table { border-collapse: collapse; margin: 0 0 18px; width: 100%; font-size: 15px; }
+.prose-aivo th, .prose-aivo td { border: 1px solid var(--color-line); padding: 8px 12px; text-align: left; }
+.prose-aivo pre {
+  background: var(--color-ink) !important;
+  border-radius: 14px;
+  padding: 20px 22px;
+  overflow-x: auto;
+  margin: 0 0 22px;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.prose-aivo :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary-d);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+/* смена слов в hero (см. src/components/TypeSwap.tsx) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes word-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+  .word-in { animation: word-in 0.35s ease; }
+}
+
+/* page transition (см. src/app/template.tsx) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes page-enter {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  .page-enter { animation: page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+}
+
+/* reveal-on-scroll (управляется компонентом <Reveal/>) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+}

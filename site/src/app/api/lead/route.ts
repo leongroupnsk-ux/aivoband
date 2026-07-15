@@ -1,0 +1,85 @@
+import { NextRequest, NextResponse } from "next/server";
+
+/**
+ * Приём заявок (ТЗ §9): honeypot + rate-limit, отправка в Telegram.
+ * Ключи — только на сервере (ТЗ §12): TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID в env
+ * (см. .env.example). Без них заявка логируется — сайт работает и до передачи токенов.
+ */
+
+const hits = new Map<string, { count: number; ts: number }>();
+const WINDOW_MS = 60_000;
+const LIMIT = 5;
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const rec = hits.get(ip);
+  if (!rec || now - rec.ts > WINDOW_MS) {
+    hits.set(ip, { count: 1, ts: now });
+    return false;
+  }
+  rec.count += 1;
+  return rec.count > LIMIT;
+}
+
+async function sendTelegram(lead: Record<string, string>): Promise<boolean> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return false;
+
+  const text = [
+    "🔔 Новая заявка с сайта Aivo",
+    `Имя: ${lead.name}`,
+    `Контакт: ${lead.contact}`,
+    lead.solution && `Решение: ${lead.solution}`,
+    lead.message && `Сообщение: ${lead.message}`,
+    `Источник: ${lead.source}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text }),
+  });
+  return res.ok;
+}
+
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "local";
+  if (rateLimited(ip)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  const body = await req.json().catch(() => null);
+  if (!body?.name?.trim() || !body?.contact?.trim()) {
+    return NextResponse.json({ error: "name and contact are required" }, { status: 400 });
+  }
+  // honeypot: боты заполняют скрытое поле — отвечаем 200, но не обрабатываем
+  if (body.company_website) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const lead = {
+    name: String(body.name).slice(0, 200),
+    contact: String(body.contact).slice(0, 200),
+    solution: String(body.solution ?? "").slice(0, 50),
+    message: String(body.message ?? "").slice(0, 2000),
+    source: String(body.source ?? "form").slice(0, 50),
+    at: new Date().toISOString(),
+  };
+
+  try {
+    const delivered = await sendTelegram(lead);
+    if (!delivered) {
+      // канал не настроен или недоступен — фиксируем в логах хостинга,
+      // чтобы заявка не потерялась (дубль в CRM/email — при передаче доступов)
+      console.log("[lead:fallback]", JSON.stringify(lead));
+    }
+  } catch (e) {
+    console.error("[lead:telegram-error]", e);
+    console.log("[lead:fallback]", JSON.stringify(lead));
+  }
+
+  return NextResponse.json({ ok: true });
+}
