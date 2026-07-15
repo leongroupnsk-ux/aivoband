@@ -57,7 +57,7 @@ export default function Home() {
           </div>
           <div className="mt-11 inline-flex items-center gap-2.5 rounded-full border border-primary-l/20 px-4 py-2 font-mono text-[13px] text-subtle">
             <span className="size-1.5 rounded-full bg-cyanb shadow-[0_0_12px_#22d3ee]" />
-            [N] проектов · работаем на ваших данных
+            172 проекта · работаем на ваших данных
           </div>
         </div>
       </section>
