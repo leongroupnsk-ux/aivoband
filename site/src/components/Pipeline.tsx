@@ -24,7 +24,7 @@ export default function Pipeline() {
     const nodes = [...root.querySelectorAll<HTMLElement>("[data-pnode]")];
     const links = [...root.querySelectorAll<HTMLElement>("[data-plink]")];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const desktop = matchMedia("(min-width: 768px)").matches;
+    const desktop = matchMedia("(min-width: 1024px)").matches;
 
     // fallback: подсветка по IntersectionObserver без pin
     if (reduced || !desktop) {
@@ -96,14 +96,14 @@ export default function Pipeline() {
 
   return (
     <div ref={ref} className="py-8">
-      <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-0">
+      <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-0">
         {NODES.map((n, i) => (
           <div key={n.t} className="contents">
             {i > 0 && (
               <span
                 aria-hidden
                 data-plink
-                className="h-6 w-0.5 shrink-0 md:h-0.5 md:w-6"
+                className="h-6 w-0.5 shrink-0 lg:h-0.5 lg:w-6"
                 style={{
                   background:
                     "linear-gradient(90deg, rgba(165,180,252,.35) 0 45%, #22d3ee 50%, rgba(165,180,252,.35) 55% 100%) 0 0 / 300% 100%",

@@ -181,10 +181,10 @@ export default function Home() {
             <h2 className="mt-4 text-[clamp(30px,4vw,40px)]">Пять шагов — и система работает</h2>
           </Reveal>
           <Reveal className="mt-12">
-            <ol className="flex flex-col justify-center gap-2 md:flex-row md:items-center md:gap-0">
+            <ol className="flex flex-col justify-center gap-2 lg:flex-row lg:items-center lg:gap-0">
               {["Бриф", "Аудит данных", "MVP", "Запуск", "Поддержка"].map((s, i) => (
                 <li key={s} className="contents">
-                  {i > 0 && <span aria-hidden className="h-6 w-0.5 shrink-0 bg-primary-l/30 md:h-0.5 md:w-10" />}
+                  {i > 0 && <span aria-hidden className="h-6 w-0.5 shrink-0 bg-primary-l/30 lg:h-0.5 lg:w-10" />}
                   <span className="rounded-xl border border-primary-l/20 px-6 py-3 text-center font-display text-[15px] text-subtle">
                     {s}
                   </span>
