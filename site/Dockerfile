@@ -2,7 +2,8 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# зеркало npm: registry.npmjs.org из РФ-датацентров нестабилен (обрывы ~100с)
+RUN npm config set registry https://registry.npmmirror.com && npm ci --fetch-retries=5 --fetch-timeout=120000
 
 FROM node:22-alpine AS build
 WORKDIR /app

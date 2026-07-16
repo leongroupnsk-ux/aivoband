@@ -58,6 +58,12 @@ ssh root@<IP> 'certbot --nginx -d <домен> --redirect'
 
 Ориентир цены: ~400–800 ₽/мес. Standalone-сборка сайта — 62 МБ, в памяти процесс держит ~150–250 МБ.
 
+**Уроки реального деплоя на Timeweb (16.07.2026), уже учтены в конфигах:**
+- На 2 ГБ RAM нужен swap для сборки: `fallocate -l 3G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && echo '/swapfile none swap sw 0 0' >> /etc/fstab`.
+- Docker Hub с РФ-IP быстро упирается в 429 — прописать зеркало: `printf '{"registry-mirrors":["https://dockerhub.timeweb.cloud"]}\n' > /etc/docker/daemon.json && systemctl restart docker`.
+- registry.npmjs.org из РФ-ДЦ рвётся — Dockerfile уже использует registry.npmmirror.com с ретраями.
+- litter.catbox.moe заблокирован РКН; для доставки кода использовать GitHub (репо: leongroupnsk-ux/aivoband).
+
 **Шаги:**
 
 ```bash
