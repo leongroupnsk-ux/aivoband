@@ -62,13 +62,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 02 Логобар */}
+      {/* 02 Логобар — бесшовная лента. Две одинаковые группы, отступы через
+          mx (а не flex-gap): шов между группами равен внутреннему шагу, поэтому
+          сдвиг на -50% ложится в точности встык. Каждая группа шире экрана
+          (ниши повторены дважды) — на широких мониторах не появляется пустота. */}
       <div className="overflow-hidden border-y border-primary-l/10 py-6" aria-label="Нам доверяют">
-        <div className="flex w-max animate-[marquee_30s_linear_infinite] gap-16 motion-reduce:animate-none">
-          {[...NICHES, ...NICHES].map((n, i) => (
-            <span key={i} className="whitespace-nowrap font-display text-[17px] font-semibold text-[#8a85c4]">
-              {n}
-            </span>
+        <div className="flex w-max animate-[marquee_40s_linear_infinite] motion-reduce:animate-none">
+          {[0, 1].map((group) => (
+            <ul key={group} className="flex shrink-0" aria-hidden={group === 1}>
+              {[...NICHES, ...NICHES].map((n, i) => (
+                <li key={i} className="mx-8 whitespace-nowrap font-display text-[17px] font-semibold text-[#8a85c4]">
+                  {n}
+                </li>
+              ))}
+            </ul>
           ))}
         </div>
       </div>
