@@ -70,7 +70,7 @@ export default function Pipeline() {
   }, []);
 
   return (
-    <div ref={ref} className="mt-14">
+    <div ref={ref} className="mt-6">
       <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-0">
         {NODES.map((n, idx) => (
           <div key={n.t} className="contents">
