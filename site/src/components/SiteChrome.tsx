@@ -1,0 +1,36 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Script from "next/script";
+import Header from "./Header";
+import Footer from "./Footer";
+import SmoothScroll from "./SmoothScroll";
+
+/**
+ * Публичный «хром» сайта (шапка, футер, плавный скролл, чат-виджет).
+ * Скрывается на /admin — админка автономна, без навигации и чата сайта.
+ */
+function isAdmin(pathname: string): boolean {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}
+
+export function SiteChromeTop() {
+  if (isAdmin(usePathname())) return null;
+  return (
+    <>
+      <SmoothScroll />
+      <Header />
+    </>
+  );
+}
+
+export function SiteChromeBottom() {
+  if (isAdmin(usePathname())) return null;
+  return (
+    <>
+      <Footer />
+      {/* Живой RAG-ассистент Aivo (наш продукт как демонстрация, ТЗ §9) */}
+      <Script src="https://aivochat.ru/widget.js" data-key="pk_e5t_BWv_ihg3" strategy="afterInteractive" />
+    </>
+  );
+}

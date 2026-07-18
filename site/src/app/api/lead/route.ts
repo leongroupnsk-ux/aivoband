@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { addLead } from "@/lib/leads";
 
 /**
  * Приём заявок (ТЗ §9): honeypot + rate-limit, отправка в Telegram.
@@ -68,6 +69,13 @@ export async function POST(req: NextRequest) {
     source: String(body.source ?? "form").slice(0, 50),
     at: new Date().toISOString(),
   };
+
+  // сохраняем в хранилище (админка) — заявка не теряется, даже если Telegram недоступен
+  try {
+    addLead(lead);
+  } catch (e) {
+    console.error("[lead:store-error]", e);
+  }
 
   try {
     const delivered = await sendTelegram(lead);

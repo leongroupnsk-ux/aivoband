@@ -13,3 +13,14 @@ services:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://aivo.example}
+      # Админка (/admin): пароль менеджера + секрет подписи сессии
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_SECRET: ${ADMIN_SECRET:-}
+      DATA_DIR: /data
+    volumes:
+      # именованный том: заявки переживают пересборку; права наследуются из образа
+      # (bind-mount дал бы root-владельца и запретил запись non-root процессу)
+      - aivo-data:/data
+
+volumes:
+  aivo-data:

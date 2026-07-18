@@ -21,6 +21,9 @@ RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=build --chown=nextjs:nodejs /app/public ./public
+# /data — точка монтирования тома с заявками; создаём с правами nextjs,
+# чтобы именованный том инициализировался с правильным владельцем
+RUN mkdir -p /data && chown nextjs:nodejs /data
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
