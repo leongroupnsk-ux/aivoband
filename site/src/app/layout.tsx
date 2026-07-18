@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Outfit, Instrument_Sans, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-import ChatWidget from "@/components/ChatWidget";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -53,7 +53,9 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <ChatWidget />
+        {/* Живой RAG-ассистент Aivo (наш продукт как демонстрация, ТЗ §9).
+            Заменил временную форму-заглушку ChatWidget. */}
+        <Script src="https://aivochat.ru/widget.js" data-key="pk_e5t_BWv_ihg3" strategy="afterInteractive" />
       </body>
     </html>
   );
