@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isAuthed } from "@/lib/auth";
 import { listLeads, leadStats } from "@/lib/leads";
@@ -22,15 +23,23 @@ export default async function AdminPage() {
             Всего: {stats.total} · новых: {stats.new} · за неделю: {stats.week}
           </p>
         </div>
-        <form action="/api/admin/logout" method="post">
-          <button
-            type="submit"
-            className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white"
-            formAction="/api/admin/logout"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/content"
+            className="rounded-full border border-primary/40 px-4 py-2 text-sm text-primary-l transition-colors hover:bg-primary/10"
           >
-            Выйти
-          </button>
-        </form>
+            Контент →
+          </Link>
+          <form action="/api/admin/logout" method="post">
+            <button
+              type="submit"
+              className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white"
+              formAction="/api/admin/logout"
+            >
+              Выйти
+            </button>
+          </form>
+        </div>
       </header>
 
       <LeadsTable initial={leads} solutionNames={solutionNames} />

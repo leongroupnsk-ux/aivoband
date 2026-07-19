@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import { solutions } from "@/data/solutions";
+import { getSolutions } from "@/lib/content-store";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Решения Aivo: 6 ИИ-продуктов для бизнеса",
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function SolutionsPage() {
+  const solutions = getSolutions();
   return (
     <section className="section-y">
       <div className="container-site">

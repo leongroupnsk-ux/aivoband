@@ -2,18 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import LeadForm from "@/components/LeadForm";
-import { cases, getCase } from "@/data/cases";
+import { getCaseBySlug } from "@/lib/content-store";
 
-export function generateStaticParams() {
-  return cases.map((c) => ({ slug: c.slug }));
-}
+// Кейсы редактируются из админки в рантайме — рендерим динамически
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const c = getCase((await params).slug);
+  const c = getCaseBySlug((await params).slug);
   if (!c) return {};
   return { title: `${c.metric} — кейс ${c.niche}`, description: c.context };
 }
@@ -23,7 +22,7 @@ export default async function CasePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const c = getCase((await params).slug);
+  const c = getCaseBySlug((await params).slug);
   if (!c) notFound();
 
   return (

@@ -3,8 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import LeadForm from "@/components/LeadForm";
-import { getSolution, solutions } from "@/data/solutions";
+import { getSolutionBySlug } from "@/lib/content-store";
+import { solutions } from "@/data/solutions";
 import JsonLd, { serviceLd, breadcrumbLd } from "@/components/JsonLd";
+
+// Slug'и решений фиксированы (нужны для статической генерации),
+// но контент читается из рантайм-хранилища — правки видны без пересборки.
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return solutions.map((s) => ({ slug: s.slug }));
@@ -15,7 +20,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const s = getSolution((await params).slug);
+  const s = getSolutionBySlug((await params).slug);
   if (!s) return {};
   return { title: s.name, description: s.sub };
 }
@@ -25,7 +30,7 @@ export default async function SolutionPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const s = getSolution((await params).slug);
+  const s = getSolutionBySlug((await params).slug);
   if (!s) notFound();
 
   return (
@@ -107,7 +112,7 @@ export default async function SolutionPage({
           </div>
           <div className="card-n h-fit lg:sticky lg:top-24">
             <span className="eyebrow">Стоимость</span>
-            <div className="grad-text mt-3 font-display text-[38px] font-bold">от [X] ₽</div>
+            <div className="grad-text mt-3 font-display text-[34px] font-bold">{s.price || "Рассчитывается индивидуально"}</div>
             <ul className="mt-4 mb-6 list-disc pl-5 text-[14.5px] text-mutedc">
               {s.priceNote.map((n) => (
                 <li key={n} className="mb-1.5">{n}</li>

@@ -16,6 +16,7 @@ export interface Solution {
   benefits: { title: string; text: string }[];
   includes: string[];
   steps: { n: string; title: string; text: string }[];
+  price?: string; // крупная строка стоимости, напр. «от 150 000 ₽». Пусто → «Рассчитывается индивидуально»
   priceNote: string[];
 }
 

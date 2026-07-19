@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import { cases } from "@/data/cases";
+import { getCases, casesAreCustom } from "@/lib/content-store";
+
+// Читаем контент из рантайм-хранилища — правки из админки видны без пересборки
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Кейсы внедрения ИИ с цифрами",
@@ -9,6 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default function CasesPage() {
+  const cases = getCases();
+  const custom = casesAreCustom();
   return (
     <section className="section-y">
       <div className="container-site">
@@ -33,9 +38,11 @@ export default function CasesPage() {
             </Reveal>
           ))}
         </div>
-        <p className="mt-10 font-mono text-[13px] text-subtle">
-          [этап 6] Здесь появятся 2–3 кейса с реальными цифрами от заказчика + фильтр по типу решения и нише.
-        </p>
+        {!custom && (
+          <p className="mt-10 font-mono text-[13px] text-subtle">
+            [этап 6] Здесь появятся 2–3 кейса с реальными цифрами от заказчика + фильтр по типу решения и нише.
+          </p>
+        )}
       </div>
     </section>
   );

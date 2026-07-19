@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, CATEGORIES } from "@/lib/blog";
-import { solutions } from "@/data/solutions";
-import { cases } from "@/data/cases";
+import { getSolutions, getCases } from "@/lib/content-store";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://aivo.example";
 
-// Авто-sitemap (ТЗ §7, §10): обновляется при каждой сборке/публикации статьи.
+// Динамический sitemap: включает кейсы из рантайм-хранилища (ТЗ §7, §10)
+export const dynamic = "force-dynamic";
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  const solutions = getSolutions();
+  const cases = getCases();
   const staticPages = ["", "/solutions", "/process", "/cases", "/blog", "/about", "/contacts"].map((p) => ({
     url: `${BASE}${p}`,
     changeFrequency: "weekly" as const,
