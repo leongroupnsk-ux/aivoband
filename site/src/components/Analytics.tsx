@@ -2,8 +2,8 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { YM_ID, GA_ID, pageview } from "@/lib/analytics";
+import { useEffect, useRef, useState } from "react";
+import { YM_ID, GA_ID, pageview, getConsent, CONSENT_EVENT } from "@/lib/analytics";
 
 /**
  * Счётчики Яндекс.Метрики и GA4. Рендерятся только при заданных ID
@@ -13,6 +13,15 @@ import { YM_ID, GA_ID, pageview } from "@/lib/analytics";
 export default function Analytics() {
   const pathname = usePathname();
   const first = useRef(true);
+  const [granted, setGranted] = useState(false);
+
+  // согласие: читаем при монтировании и слушаем изменения (принял в баннере)
+  useEffect(() => {
+    const sync = () => setGranted(getConsent() === "granted");
+    sync();
+    window.addEventListener(CONSENT_EVENT, sync);
+    return () => window.removeEventListener(CONSENT_EVENT, sync);
+  }, []);
 
   useEffect(() => {
     // первый просмотр уже считают init/config — шлём hit только на переходах
@@ -23,7 +32,7 @@ export default function Analytics() {
     pageview(pathname + window.location.search);
   }, [pathname]);
 
-  if (!YM_ID && !GA_ID) return null;
+  if ((!YM_ID && !GA_ID) || !granted) return null;
 
   return (
     <>

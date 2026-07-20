@@ -12,6 +12,22 @@ declare global {
 export const YM_ID = process.env.NEXT_PUBLIC_YM_ID;
 export const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
+export const CONSENT_KEY = "aivo-consent";
+export const CONSENT_EVENT = "aivo-consent-change";
+
+/** 'granted' | 'denied' | null (выбор ещё не сделан). */
+export function getConsent(): "granted" | "denied" | null {
+  if (typeof window === "undefined") return null;
+  const v = localStorage.getItem(CONSENT_KEY);
+  return v === "granted" || v === "denied" ? v : null;
+}
+
+export function setConsent(value: "granted" | "denied"): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(CONSENT_KEY, value);
+  window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: value }));
+}
+
 /** Цель/событие: конверсии (отправка заявки, клики CTA). */
 export function track(goal: string, params?: Record<string, unknown>): void {
   if (typeof window === "undefined") return;
