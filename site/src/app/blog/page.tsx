@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CATEGORIES, formatDate, getAllPosts } from "@/lib/blog";
 import BlogExplorer from "@/components/BlogExplorer";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Блог Aivo: как устроены ИИ-системы для бизнеса",
   description:

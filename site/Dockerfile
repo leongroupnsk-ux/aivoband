@@ -25,6 +25,8 @@ RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=build --chown=nextjs:nodejs /app/public ./public
+# content/ нужен в рантайме: страницы блога стали динамическими и читают MDX-файлы
+COPY --from=build --chown=nextjs:nodejs /app/content ./content
 # /data — точка монтирования тома с заявками; создаём с правами nextjs,
 # чтобы именованный том инициализировался с правильным владельцем
 RUN mkdir -p /data && chown nextjs:nodejs /data

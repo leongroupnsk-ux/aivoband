@@ -16,9 +16,14 @@ export default async function AdminContentPage() {
           <h1 className="font-display text-3xl font-semibold">Контент</h1>
           <p className="mt-1 text-sm text-subtle">Кейсы и решения — правка без пересборки сайта</p>
         </div>
-        <Link href="/admin" className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white">
-          ← К заявкам
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/admin/blog" className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white">
+            Блог
+          </Link>
+          <Link href="/admin" className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white">
+            ← К заявкам
+          </Link>
+        </div>
       </header>
 
       <ContentEditor initialCases={getCases()} initialSolutions={getSolutions()} />

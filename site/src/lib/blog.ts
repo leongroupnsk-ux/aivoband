@@ -31,8 +31,10 @@ export interface Post extends PostMeta {
 }
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+// Рантайм-статьи (создаются из админки) — на томе aivo-data, переживают пересборку
+const RUNTIME_FILE = path.join(process.env.DATA_DIR ?? path.join(process.cwd(), ".data"), "content", "blog.json");
 
-function slugify(text: string): string {
+export function slugify(text: string): string {
   // совпадает с rehype-slug (github-slugger) для кириллицы достаточно близко:
   // нижний регистр, пробелы → дефисы, срезаем пунктуацию
   return text
@@ -47,43 +49,91 @@ function readingTime(content: string): number {
   return Math.max(1, Math.round(words / 180));
 }
 
-function parseFile(file: string): Post {
-  const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
-  const { data, content } = matter(raw);
-  const headings = [...content.matchAll(/^##\s+(.+)$/gm)].map((m) => ({
-    id: slugify(m[1]),
-    text: m[1],
-  }));
+/** Собирает Post из метаданных и Markdown-тела (общее для файлов и рантайм-статей). */
+function buildPost(meta: Partial<PostMeta> & { slug: string }, content: string): Post {
+  const headings = [...content.matchAll(/^##\s+(.+)$/gm)].map((m) => ({ id: slugify(m[1]), text: m[1] }));
   return {
-    slug: file.replace(/\.mdx?$/, ""),
-    title: data.title ?? "",
-    excerpt: data.excerpt ?? "",
-    category: data.category ?? "guides",
-    date: data.date ?? "1970-01-01",
-    author: data.author ?? "Команда Aivo",
-    solution: data.solution,
-    draft: data.draft ?? false,
+    slug: meta.slug,
+    title: meta.title ?? "",
+    excerpt: meta.excerpt ?? "",
+    category: meta.category ?? "guides",
+    date: meta.date ?? "1970-01-01",
+    author: meta.author ?? "Команда Aivo",
+    solution: meta.solution,
+    draft: meta.draft ?? false,
     readingMinutes: readingTime(content),
     content,
     headings,
   };
 }
 
-export function getAllPosts(): Post[] {
+function parseFile(file: string): Post {
+  const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
+  const { data, content } = matter(raw);
+  return buildPost({ ...(data as Partial<PostMeta>), slug: file.replace(/\.mdx?$/, "") }, content);
+}
+
+function filePosts(): Post[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
-  return fs
-    .readdirSync(BLOG_DIR)
-    .filter((f) => /\.mdx?$/.test(f))
-    .map(parseFile)
-    .filter((p) => !p.draft)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  return fs.readdirSync(BLOG_DIR).filter((f) => /\.mdx?$/.test(f)).map(parseFile);
+}
+
+// ── Рантайм-статьи (админка) ───────────────────────────────────────
+export interface StoredPost extends PostMeta {
+  body: string; // Markdown/MDX
+}
+
+function readRuntime(): StoredPost[] {
+  try {
+    if (!fs.existsSync(RUNTIME_FILE)) return [];
+    return JSON.parse(fs.readFileSync(RUNTIME_FILE, "utf8")) as StoredPost[];
+  } catch {
+    return [];
+  }
+}
+
+function writeRuntime(posts: StoredPost[]): void {
+  fs.mkdirSync(path.dirname(RUNTIME_FILE), { recursive: true });
+  fs.writeFileSync(RUNTIME_FILE, JSON.stringify(posts, null, 2), "utf8");
+}
+
+/** Список рантайм-статей для админки (включая черновики), без вычисленных полей. */
+export function listRuntimePosts(): StoredPost[] {
+  return readRuntime().sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function upsertRuntimePost(post: StoredPost): void {
+  const posts = readRuntime();
+  const i = posts.findIndex((p) => p.slug === post.slug);
+  if (i === -1) posts.push(post);
+  else posts[i] = post;
+  writeRuntime(posts);
+}
+
+export function deleteRuntimePost(slug: string): void {
+  writeRuntime(readRuntime().filter((p) => p.slug !== slug));
+}
+
+/** Все статьи: рантайм + файловые, рантайм побеждает при совпадении slug. */
+export function getAllPosts(): Post[] {
+  const runtime = readRuntime().map((p) => buildPost(p, p.body));
+  const runtimeSlugs = new Set(runtime.map((p) => p.slug));
+  const files = filePosts().filter((p) => !runtimeSlugs.has(p.slug));
+  return [...runtime, ...files].filter((p) => !p.draft).sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export function getPost(slug: string): Post | undefined {
+  const runtime = readRuntime().find((p) => p.slug === slug);
+  if (runtime) return runtime.draft ? undefined : buildPost(runtime, runtime.body);
   const file = ["mdx", "md"].map((ext) => `${slug}.${ext}`).find((f) => fs.existsSync(path.join(BLOG_DIR, f)));
   if (!file) return undefined;
   const post = parseFile(file);
   return post.draft ? undefined : post;
+}
+
+/** Занят ли slug (файловой статьёй) — чтобы не переопределять демо-статьи молча. */
+export function slugExistsAsFile(slug: string): boolean {
+  return ["mdx", "md"].some((ext) => fs.existsSync(path.join(BLOG_DIR, `${slug}.${ext}`)));
 }
 
 export function getRelated(post: Post, count = 3): Post[] {

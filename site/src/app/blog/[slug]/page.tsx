@@ -5,7 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
-import { CATEGORIES, formatDate, getAllPosts, getPost, getRelated } from "@/lib/blog";
+import { CATEGORIES, formatDate, getPost, getRelated } from "@/lib/blog";
 import { getSolution } from "@/data/solutions";
 import Callout from "@/components/mdx/Callout";
 import ArticleProgress from "@/components/ArticleProgress";
@@ -13,9 +13,8 @@ import Toc from "@/components/Toc";
 import ShareButtons from "@/components/ShareButtons";
 import JsonLd, { breadcrumbLd } from "@/components/JsonLd";
 
-export function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
-}
+// Статьи создаются/правятся из админки в рантайме → рендерим динамически
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

@@ -3,9 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATEGORIES, formatDate, getAllPosts } from "@/lib/blog";
 
-export function generateStaticParams() {
-  return Object.keys(CATEGORIES).map((slug) => ({ slug }));
-}
+// Категории включают рантайм-статьи → динамический рендер
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
