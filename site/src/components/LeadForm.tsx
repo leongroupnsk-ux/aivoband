@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { solutions } from "@/data/solutions";
+import { track } from "@/lib/analytics";
 
 type Status = "idle" | "loading" | "done" | "error";
 
@@ -30,6 +31,9 @@ export default function LeadForm({ presetSolution }: { presetSolution?: string }
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (res.ok) {
+        track("lead_submit", { solution: data.solution || "не указано", source: data.source || "form" });
+      }
       setStatus(res.ok ? "done" : "error");
     } catch {
       setStatus("error");

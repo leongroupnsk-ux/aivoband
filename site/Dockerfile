@@ -11,7 +11,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # NEXT_PUBLIC_* переменные вшиваются на этапе сборки
 ARG NEXT_PUBLIC_SITE_URL=https://aivo.example
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_YM_ID=
+ARG NEXT_PUBLIC_GA_ID=
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_YM_ID=$NEXT_PUBLIC_YM_ID \
+    NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 RUN npm run build
 
 FROM node:22-alpine AS runner
