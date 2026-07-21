@@ -8,6 +8,7 @@ import SmoothScroll from "./SmoothScroll";
 import Analytics from "./Analytics";
 import CookieConsent from "./CookieConsent";
 import UtmCapture from "./UtmCapture";
+import ThirdPartyInputFix from "./ThirdPartyInputFix";
 
 /**
  * Публичный «хром» сайта (шапка, футер, плавный скролл, чат-виджет).
@@ -35,6 +36,7 @@ export function SiteChromeBottom() {
       <Footer />
       <Analytics />
       <CookieConsent />
+      <ThirdPartyInputFix />
       {/* Живой RAG-ассистент Aivo (наш продукт как демонстрация, ТЗ §9) */}
       <Script src="https://aivochat.ru/widget.js" data-key="pk_e5t_BWv_ihg3" strategy="afterInteractive" />
     </>
