@@ -19,6 +19,7 @@ export interface Lead {
   at: string; // ISO
   status: LeadStatus;
   note: string;
+  utm?: Record<string, string>; // источник кампании (UTM, реферер, страница входа)
 }
 
 const DATA_DIR = process.env.DATA_DIR ?? path.join(process.cwd(), ".data");

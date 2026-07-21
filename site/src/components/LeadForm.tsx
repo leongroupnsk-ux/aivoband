@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { solutions } from "@/data/solutions";
 import { track } from "@/lib/analytics";
+import { getUtm } from "@/lib/utm";
 
 type Status = "idle" | "loading" | "done" | "error";
 
@@ -29,7 +30,7 @@ export default function LeadForm({ presetSolution }: { presetSolution?: string }
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, utm: getUtm() }),
       });
       if (res.ok) {
         track("lead_submit", { solution: data.solution || "не указано", source: data.source || "form" });

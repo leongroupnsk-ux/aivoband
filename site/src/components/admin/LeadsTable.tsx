@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Lead, LeadStatus } from "@/lib/leads";
+import { formatUtm } from "@/lib/utm";
 
 const STATUS_LABEL: Record<LeadStatus, string> = {
   new: "Новая",
@@ -85,6 +86,13 @@ export default function LeadsTable({
               </div>
 
               {l.message && <p className="mt-3 text-[15px] text-subtle">{l.message}</p>}
+
+              {l.utm && formatUtm(l.utm) && (
+                <p className="mt-2 font-mono text-[12px] text-cyanb-l/80">
+                  Источник: {formatUtm(l.utm)}
+                  {l.utm.landing && <span className="text-subtle"> · вход: {l.utm.landing}</span>}
+                </p>
+              )}
 
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 {ORDER.map((s) => (

@@ -1,6 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addLead } from "@/lib/leads";
 
+/** Строка источника кампании для Telegram-уведомления. */
+function utmLine(u: Record<string, string>): string | undefined {
+  const parts = [u.utm_source, u.utm_medium, u.utm_campaign].filter(Boolean);
+  if (parts.length) return `Кампания: ${parts.join(" / ")}`;
+  if (u.referrer) return `Переход с: ${u.referrer}`;
+  return undefined;
+}
+
+/** Оставляем только ожидаемые ключи UTM и режем длину — данные приходят от клиента. */
+function sanitizeUtm(raw: unknown): Record<string, string> | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const allowed = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "landing", "referrer"];
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (allowed.includes(k) && typeof v === "string" && v) out[k] = v.slice(0, 200);
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 /**
  * Приём заявок (ТЗ §9): honeypot + rate-limit, отправка в Telegram.
  * Ключи — только на сервере (ТЗ §12): TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID в env
@@ -22,7 +41,17 @@ function rateLimited(ip: string): boolean {
   return rec.count > LIMIT;
 }
 
-async function sendTelegram(lead: Record<string, string>): Promise<boolean> {
+interface LeadPayload {
+  name: string;
+  contact: string;
+  solution: string;
+  message: string;
+  source: string;
+  at: string;
+  utm?: Record<string, string>;
+}
+
+async function sendTelegram(lead: LeadPayload): Promise<boolean> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return false;
@@ -33,7 +62,8 @@ async function sendTelegram(lead: Record<string, string>): Promise<boolean> {
     `Контакт: ${lead.contact}`,
     lead.solution && `Решение: ${lead.solution}`,
     lead.message && `Сообщение: ${lead.message}`,
-    `Источник: ${lead.source}`,
+    `Страница: ${lead.source}`,
+    lead.utm && utmLine(lead.utm),
   ]
     .filter(Boolean)
     .join("\n");
@@ -68,6 +98,7 @@ export async function POST(req: NextRequest) {
     message: String(body.message ?? "").slice(0, 2000),
     source: String(body.source ?? "form").slice(0, 50),
     at: new Date().toISOString(),
+    utm: sanitizeUtm(body.utm),
   };
 
   // сохраняем в хранилище (админка) — заявка не теряется, даже если Telegram недоступен

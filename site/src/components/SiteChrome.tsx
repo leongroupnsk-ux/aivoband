@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import SmoothScroll from "./SmoothScroll";
 import Analytics from "./Analytics";
 import CookieConsent from "./CookieConsent";
+import UtmCapture from "./UtmCapture";
 
 /**
  * Публичный «хром» сайта (шапка, футер, плавный скролл, чат-виджет).
@@ -21,6 +22,7 @@ export function SiteChromeTop() {
   return (
     <>
       <SmoothScroll />
+      <UtmCapture />
       <Header />
     </>
   );
