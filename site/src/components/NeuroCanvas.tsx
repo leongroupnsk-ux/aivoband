@@ -26,6 +26,13 @@ export default function NeuroCanvas({ className = "" }: { className?: string }) 
     let visible = true;
 
     const resize = () => {
+      // Во время смены размеров (поворот экрана, скрытая вкладка) элемент может
+      // на мгновение отдать нулевую ширину. Без этой проверки холст навсегда
+      // остаётся нулевым и сцена молча пропадает — повторяем на следующем кадре.
+      if (cv.offsetWidth === 0 || cv.offsetHeight === 0) {
+        requestAnimationFrame(resize);
+        return;
+      }
       W = cv.width = cv.offsetWidth * dpr;
       H = cv.height = cv.offsetHeight * dpr;
       const n = Math.min(90, Math.floor((W * H) / 28000 / dpr));
