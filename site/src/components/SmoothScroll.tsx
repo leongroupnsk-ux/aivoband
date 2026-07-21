@@ -23,7 +23,32 @@ export default function SmoothScroll() {
         const tick = (time: number) => lenis.raf(time * 1000);
         gsap.ticker.add(tick);
         gsap.ticker.lagSmoothing(0);
+
+        // Пересчёт границ прокрутки. Lenis запоминает высоту страницы при старте,
+        // а она успевает вырасти позже: дозагрузились шрифты, отрисовался сторонний
+        // виджет, развернулась длинная статья. Со старой границей страница перестаёт
+        // прокручиваться до конца — молча, будто «упёрлась». Поэтому пересчитываем
+        // на загрузке, на готовности шрифтов и при любом изменении высоты body.
+        const refresh = () => {
+          lenis.resize();
+          ScrollTrigger.refresh();
+        };
+        addEventListener("load", refresh);
+        document.fonts?.ready.then(refresh).catch(() => {});
+
+        let lastHeight = document.body.scrollHeight;
+        const ro = new ResizeObserver(() => {
+          const h = document.body.scrollHeight;
+          if (Math.abs(h - lastHeight) > 4) {
+            lastHeight = h;
+            refresh();
+          }
+        });
+        ro.observe(document.body);
+
         cleanup = () => {
+          removeEventListener("load", refresh);
+          ro.disconnect();
           gsap.ticker.remove(tick);
           lenis.destroy();
         };
