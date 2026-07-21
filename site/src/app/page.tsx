@@ -6,6 +6,7 @@ import TypeSwap from "@/components/TypeSwap";
 import Pipeline from "@/components/Pipeline";
 import Counter from "@/components/Counter";
 import { solutions } from "@/data/solutions";
+import { getAllScenarios } from "@/lib/scenarios";
 import JsonLd, { organizationLd, webSiteLd, faqLd } from "@/components/JsonLd";
 
 const NICHES = ["E-COMMERCE", "ОНЛАЙН-ШКОЛЫ", "КЛИНИКИ", "SAAS-СЕРВИСЫ", "АГЕНТСТВА", "ФИНТЕХ"];
@@ -21,6 +22,9 @@ const FAQ = [
 ];
 
 export default function Home() {
+  // список разборов на момент сборки; новые из админки появятся после пересборки
+  const scenarios = getAllScenarios();
+
   return (
     <>
       <JsonLd data={organizationLd} />
@@ -139,6 +143,38 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 04b Сценарии внедрения по отраслям */}
+      {scenarios.length > 0 && (
+        <section className="section-y pt-0">
+          <div className="container-site">
+            <Reveal>
+              <span className="eyebrow">Сценарии внедрения</span>
+              <h2 className="mt-4 max-w-[30ch] text-[clamp(30px,4vw,40px)]">Как это выглядит в вашей отрасли</h2>
+              <p className="mt-5 max-w-[56ch] text-[17px] text-subtle">
+                Подробные разборы: что закрываем, из чего собирается система, сколько занимает внедрение
+                и как считать окупаемость. С таблицами, графиками и расчётами.
+              </p>
+            </Reveal>
+            <div className="mt-11 flex flex-wrap gap-3">
+              {scenarios.map((s, i) => (
+                <Reveal key={s.slug} delay={i * 50}>
+                  <Link
+                    href={`/scenarios/${s.slug}`}
+                    className="flex items-center gap-2.5 rounded-full border border-primary-l/20 bg-ink2/40 px-5 py-2.5 text-[15px] transition-colors hover:border-primary/50 hover:text-white"
+                  >
+                    {s.niche}
+                    <span className="font-mono text-[12px] text-subtle">{s.readingMinutes} мин</span>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+            <Link href="/scenarios" className="btn btn-secondary mt-9 inline-flex">
+              Все разборы по отраслям
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* 05 Движок */}
       <section className="section-y pt-0">
