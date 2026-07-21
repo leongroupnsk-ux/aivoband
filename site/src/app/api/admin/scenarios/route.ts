@@ -3,18 +3,18 @@ import { compile } from "@mdx-js/mdx";
 import remarkGfm from "remark-gfm";
 import { isAuthed } from "@/lib/auth";
 import {
-  CATEGORIES,
+  upsertRuntimeScenario,
+  deleteRuntimeScenario,
+  listRuntimeScenarios,
   slugExistsAsFile,
-  upsertRuntimePost,
-  deleteRuntimePost,
-  listRuntimePosts,
-  type StoredPost,
-} from "@/lib/blog";
+  type StoredScenario,
+} from "@/lib/scenarios";
+import { defaultSolutions } from "@/lib/content-store";
 import { translitSlug } from "@/lib/slug";
 
 const isStr = (v: unknown): v is string => typeof v === "string";
 
-/** Проверяем, что тело компилируется как MDX — иначе страница статьи упадёт. */
+/** Тело должно компилироваться как MDX, иначе страница разбора упадёт. */
 async function bodyCompiles(body: string): Promise<string | null> {
   try {
     await compile(body, { remarkPlugins: [remarkGfm] });
@@ -34,37 +34,35 @@ export async function PUT(req: NextRequest) {
   const title = isStr(b.title) ? b.title.trim() : "";
   if (!title) return NextResponse.json({ error: "Заголовок обязателен" }, { status: 400 });
 
-  const providedSlug = isStr(b.slug) ? b.slug.trim() : "";
-  const originalSlug = isStr(b.originalSlug) ? b.originalSlug.trim() : ""; // при редактировании
-  const slug = translitSlug(providedSlug || title);
+  const originalSlug = isStr(b.originalSlug) ? b.originalSlug.trim() : "";
+  const slug = translitSlug(isStr(b.slug) && b.slug.trim() ? b.slug : title);
   if (!slug) return NextResponse.json({ error: "Не удалось построить slug из заголовка" }, { status: 400 });
 
-  // не даём затенять демо-статью из файлов (кроме случая, когда правим ту же рантайм-статью)
   if (slug !== originalSlug && slugExistsAsFile(slug)) {
-    return NextResponse.json({ error: `Slug «${slug}» занят файловой статьёй — задайте другой` }, { status: 400 });
+    return NextResponse.json({ error: `Slug «${slug}» занят сценарием из репозитория — задайте другой` }, { status: 400 });
   }
 
-  const category = isStr(b.category) && CATEGORIES[b.category] ? b.category : "guides";
   const body = isStr(b.body) ? b.body : "";
   const compileErr = await bodyCompiles(body);
   if (compileErr) return NextResponse.json({ error: compileErr }, { status: 400 });
 
-  const post: StoredPost = {
+  const solution = isStr(b.solution) && b.solution ? b.solution : undefined;
+  const solutionName = solution ? defaultSolutions.find((s) => s.slug === solution)?.name : undefined;
+
+  const scenario: StoredScenario = {
     slug,
+    niche: isStr(b.niche) ? b.niche.trim() : "",
     title,
-    excerpt: isStr(b.excerpt) ? b.excerpt.trim() : "",
-    category,
-    date: isStr(b.date) && b.date ? b.date : new Date().toISOString().slice(0, 10),
-    author: isStr(b.author) && b.author.trim() ? b.author.trim() : "Команда Aivo",
-    solution: isStr(b.solution) && b.solution ? b.solution : undefined,
-    draft: !!b.draft,
+    tagline: isStr(b.tagline) ? b.tagline.trim() : "",
+    solution,
+    solutionName,
+    order: Number.isFinite(Number(b.order)) ? Number(b.order) : 99,
     readingMinutes: 0, // вычисляется при чтении
     body,
   };
 
-  // если slug изменился при редактировании — удаляем старую запись
-  if (originalSlug && originalSlug !== slug) deleteRuntimePost(originalSlug);
-  upsertRuntimePost(post);
+  if (originalSlug && originalSlug !== slug) deleteRuntimeScenario(originalSlug);
+  upsertRuntimeScenario(scenario);
 
   return NextResponse.json({ ok: true, slug });
 }
@@ -73,11 +71,11 @@ export async function DELETE(req: NextRequest) {
   if (!(await isAuthed())) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const slug = new URL(req.url).searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "slug required" }, { status: 400 });
-  deleteRuntimePost(slug);
+  deleteRuntimeScenario(slug);
   return NextResponse.json({ ok: true });
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   if (!(await isAuthed())) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  return NextResponse.json({ posts: listRuntimePosts() });
+  return NextResponse.json({ scenarios: listRuntimeScenarios() });
 }

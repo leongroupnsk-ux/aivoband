@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import { getScenario } from "@/lib/scenarios";
+import { decodeSlug } from "@/lib/slug";
 import { getSolutionBySlug } from "@/lib/content-store";
 import Callout from "@/components/mdx/Callout";
 import BarCompare from "@/components/mdx/BarCompare";
@@ -20,7 +21,7 @@ import JsonLd, { breadcrumbLd } from "@/components/JsonLd";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const s = getScenario((await params).slug);
+  const s = getScenario(decodeSlug((await params).slug));
   if (!s) return {};
   return {
     title: `${s.title} — сценарий внедрения`,
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function ScenarioPage({ params }: { params: Promise<{ slug: string }> }) {
-  const s = getScenario((await params).slug);
+  const s = getScenario(decodeSlug((await params).slug));
   if (!s) notFound();
 
   const solution = s.solution ? getSolutionBySlug(s.solution) : undefined;

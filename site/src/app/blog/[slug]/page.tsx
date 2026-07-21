@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import { CATEGORIES, formatDate, getPost, getRelated } from "@/lib/blog";
+import { decodeSlug } from "@/lib/slug";
 import { getSolution } from "@/data/solutions";
 import Callout from "@/components/mdx/Callout";
 import ArticleProgress from "@/components/ArticleProgress";
@@ -21,7 +22,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = getPost((await params).slug);
+  const post = getPost(decodeSlug((await params).slug));
   if (!post) return {};
   return {
     title: post.title,
@@ -35,7 +36,7 @@ export default async function ArticlePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const post = getPost((await params).slug);
+  const post = getPost(decodeSlug((await params).slug));
   if (!post) notFound();
 
   const related = getRelated(post);

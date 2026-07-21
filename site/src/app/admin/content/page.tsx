@@ -17,6 +17,9 @@ export default async function AdminContentPage() {
           <p className="mt-1 text-sm text-subtle">Кейсы и решения — правка без пересборки сайта</p>
         </div>
         <div className="flex items-center gap-2">
+          <Link href="/admin/scenarios" className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white">
+            Сценарии
+          </Link>
           <Link href="/admin/blog" className="rounded-full border border-primary-l/25 px-4 py-2 text-sm text-subtle transition-colors hover:text-white">
             Блог
           </Link>

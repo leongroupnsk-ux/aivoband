@@ -31,6 +31,12 @@ export default async function AdminPage() {
             Контент
           </Link>
           <Link
+            href="/admin/scenarios"
+            className="rounded-full border border-primary/40 px-4 py-2 text-sm text-primary-l transition-colors hover:bg-primary/10"
+          >
+            Сценарии
+          </Link>
+          <Link
             href="/admin/blog"
             className="rounded-full border border-primary/40 px-4 py-2 text-sm text-primary-l transition-colors hover:bg-primary/10"
           >
