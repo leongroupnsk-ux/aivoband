@@ -105,9 +105,13 @@ export default async function ScenarioPage({ params }: { params: Promise<{ slug:
         </article>
       </div>
 
+      {/* Статья идёт в светлой теме, а форма свёрстана под тёмный фон (.field —
+          белый текст на тёмной подложке). Поэтому карточку задаём тёмной явно,
+          не полагаясь на .card-n: в светлой теме он становится белым, и поля
+          с заголовком превращались в нечитаемые. */}
       <section className="section-y pt-0" id="lead">
         <div className="container-site grid max-w-[880px] items-center gap-10">
-          <div className="card-n" data-glow="cyan">
+          <div className="rounded-[18px] border border-primary-l/20 bg-ink p-8 shadow-[0_20px_60px_rgba(13,10,34,0.25)]">
             <h2 className="font-display text-[26px] font-semibold text-white">Разберём вашу задачу</h2>
             <p className="mt-3 mb-7 text-subtle">
               Расскажите, что болит — посчитаем эффект на ваших цифрах, а не на модельных.
