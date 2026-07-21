@@ -40,6 +40,11 @@ export default function Footer() {
           <p className="mb-3.5 font-display font-semibold text-[15px] text-white">Ресурсы</p>
           <ul className="space-y-2">
             <li><Link className="transition-colors hover:text-white" href="/blog">Блог</Link></li>
+            <li>
+              <a className="transition-colors hover:text-white" href="https://aivochat.ru" rel="noopener" target="_blank">
+                Aivo Chat — платформа
+              </a>
+            </li>
             <li><a className="transition-colors hover:text-white" href="https://t.me/aivo" rel="noopener">Telegram</a></li>
             <li><Link className="transition-colors hover:text-white" href="/privacy">Политика ПД</Link></li>
           </ul>

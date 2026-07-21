@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { YM_ID, GA_ID, pageview, getConsent, CONSENT_EVENT } from "@/lib/analytics";
+import { YM_ID, GA_ID, pageview, track, getConsent, CONSENT_EVENT } from "@/lib/analytics";
 
 /**
  * Счётчики Яндекс.Метрики и GA4. Рендерятся только при заданных ID
@@ -31,6 +31,21 @@ export default function Analytics() {
     }
     pageview(pathname + window.location.search);
   }, [pathname]);
+
+  // Клики по главным CTA — одним делегированным слушателем, без правки каждой кнопки
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      const el = (e.target as HTMLElement | null)?.closest?.("a.btn-primary, a.btn-secondary");
+      if (!el) return;
+      track("cta_click", {
+        label: (el.textContent ?? "").trim().slice(0, 60),
+        href: el.getAttribute("href") ?? "",
+        page: window.location.pathname,
+      });
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
 
   if ((!YM_ID && !GA_ID) || !granted) return null;
 
