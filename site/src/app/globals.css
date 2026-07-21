@@ -139,6 +139,13 @@ h1, h2, h3, h4 {
   font-size: 15px;
   color: #fff;
 }
+/* Tailwind в своём сбросе ставит полям ввода color: inherit, а у body белый текст.
+   Из-за этого поля СТОРОННИХ виджетов (чат aivochat.ru) получали белый текст на
+   белом фоне — пользователь не видел, что печатает. Задаём полям читаемый цвет
+   по умолчанию; наши собственные поля перекрывают его классом .field выше. */
+input, textarea, select { color: var(--color-body); }
+.field { color: #fff; }
+
 .field::placeholder { color: var(--color-subtle); }
 .field:focus { outline: 2px solid var(--color-primary); outline-offset: 0; border-color: transparent; }
 .field[aria-invalid="true"] { border-color: var(--color-error); }
