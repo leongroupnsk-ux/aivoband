@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           <p>
             Через формы сайта мы собираем: имя, контакт (Telegram / телефон / email) и текст сообщения — исключительно для ответа на заявку. Данные не передаются третьим лицам и хранятся в защищённом месте.
           </p>
-          <p>Вопросы по данным: hello@aivo.example [заменить].</p>
+          <p>Вопросы по данным: <a href="mailto:nikitaoshepkove@gmail.com" className="underline underline-offset-2">nikitaoshepkove@gmail.com</a>.</p>
         </div>
       </div>
     </section>

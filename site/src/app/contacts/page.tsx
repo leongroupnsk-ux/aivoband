@@ -19,14 +19,14 @@ export default function ContactsPage() {
           <div className="mt-10 space-y-4">
             <div className="card-n !p-5">
               <p className="font-mono text-xs uppercase tracking-widest text-subtle">Telegram</p>
-              <a href="https://t.me/aivo" rel="noopener" className="mt-1 block text-[17px] text-primary-l hover:underline">
-                @aivo [заменить]
+              <a href="https://t.me/reklamshek" rel="noopener" className="mt-1 block text-[17px] text-primary-l hover:underline">
+                @reklamshek
               </a>
             </div>
             <div className="card-n !p-5">
               <p className="font-mono text-xs uppercase tracking-widest text-subtle">Email</p>
-              <a href="mailto:hello@aivo.example" className="mt-1 block text-[17px] text-primary-l hover:underline">
-                hello@aivo.example [заменить]
+              <a href="mailto:nikitaoshepkove@gmail.com" className="mt-1 block text-[17px] text-primary-l hover:underline">
+                nikitaoshepkove@gmail.com
               </a>
             </div>
           </div>

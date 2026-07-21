@@ -45,7 +45,7 @@ export default function Footer() {
                 Aivo Chat — платформа
               </a>
             </li>
-            <li><a className="transition-colors hover:text-white" href="https://t.me/aivo" rel="noopener">Telegram</a></li>
+            <li><a className="transition-colors hover:text-white" href="https://t.me/reklamshek" rel="noopener">Telegram</a></li>
             <li><Link className="transition-colors hover:text-white" href="/privacy">Политика ПД</Link></li>
           </ul>
         </nav>
