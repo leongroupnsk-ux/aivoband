@@ -30,6 +30,7 @@ export default function Footer() {
           <p className="mb-3.5 font-display font-semibold text-[15px] text-white">Компания</p>
           <ul className="space-y-2">
             <li><Link className="transition-colors hover:text-white" href="/process">Как мы работаем</Link></li>
+            <li><Link className="transition-colors hover:text-white" href="/scenarios">Сценарии внедрения</Link></li>
             <li><Link className="transition-colors hover:text-white" href="/cases">Кейсы</Link></li>
             <li><Link className="transition-colors hover:text-white" href="/about">О нас</Link></li>
             <li><Link className="transition-colors hover:text-white" href="/contacts">Контакты</Link></li>

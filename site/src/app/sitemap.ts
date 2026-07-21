@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, CATEGORIES } from "@/lib/blog";
 import { getSolutions, getCases } from "@/lib/content-store";
+import { getAllScenarios } from "@/lib/scenarios";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://aivo.example";
 
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default function sitemap(): MetadataRoute.Sitemap {
   const solutions = getSolutions();
   const cases = getCases();
-  const staticPages = ["", "/solutions", "/process", "/cases", "/blog", "/about", "/contacts"].map((p) => ({
+  const staticPages = ["", "/solutions", "/process", "/scenarios", "/cases", "/blog", "/about", "/contacts"].map((p) => ({
     url: `${BASE}${p}`,
     changeFrequency: "weekly" as const,
     priority: p === "" ? 1 : 0.8,
@@ -20,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages,
     ...solutions.map((s) => ({ url: `${BASE}/solutions/${s.slug}`, changeFrequency: "monthly" as const, priority: 0.9 })),
     ...cases.map((c) => ({ url: `${BASE}/cases/${c.slug}`, changeFrequency: "monthly" as const, priority: 0.7 })),
+    ...getAllScenarios().map((s) => ({ url: `${BASE}/scenarios/${s.slug}`, changeFrequency: "monthly" as const, priority: 0.8 })),
     ...getAllPosts().map((p) => ({
       url: `${BASE}/blog/${p.slug}`,
       lastModified: new Date(p.date),

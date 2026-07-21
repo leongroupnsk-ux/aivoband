@@ -9,6 +9,7 @@ import { solutions } from "@/data/solutions";
 
 const nav = [
   { href: "/process", label: "Как мы работаем" },
+  { href: "/scenarios", label: "Сценарии" },
   { href: "/cases", label: "Кейсы" },
   { href: "/blog", label: "Блог" },
   { href: "/about", label: "О нас" },
