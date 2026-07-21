@@ -46,7 +46,7 @@ export default function LeadForm({ presetSolution }: { presetSolution?: string }
       <div className="card-n text-center" role="status">
         <h3 className="text-xl">Спасибо! Заявка у нас</h3>
         <p className="mt-3 text-subtle">
-          Ответим в течение [N] часов. А пока — загляните в{" "}
+          Ответим в течение 24 часов. А пока — загляните в{" "}
           <Link href="/blog" className="text-primary-l underline underline-offset-4">блог</Link> или{" "}
           <Link href="/cases" className="text-primary-l underline underline-offset-4">кейсы</Link>.
         </p>

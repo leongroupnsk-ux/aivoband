@@ -150,7 +150,7 @@ export default async function SolutionPage({
           <div>
             <h2 className="text-[clamp(30px,4vw,40px)]">Обсудить «{s.name}»</h2>
             <p className="mt-4 max-w-[44ch] text-subtle">
-              Расскажите о задаче — за [48 часов] вернёмся с планом и оценкой. Решение уже выбрано в форме.
+              Расскажите о задаче — в течение 24 часов вернёмся с планом и оценкой. Решение уже выбрано в форме.
             </p>
           </div>
           <LeadForm presetSolution={s.slug} />

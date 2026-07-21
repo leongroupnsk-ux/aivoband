@@ -3,7 +3,7 @@ import LeadForm from "@/components/LeadForm";
 
 export const metadata: Metadata = {
   title: "Контакты и заявка",
-  description: "Расскажите о задаче — за [48 часов] предложим решение, сроки и оценку. Telegram, email, форма заявки.",
+  description: "Расскажите о задаче — в течение 24 часов предложим решение, сроки и оценку. Telegram, email, форма заявки.",
 };
 
 export default function ContactsPage() {
@@ -14,7 +14,7 @@ export default function ContactsPage() {
           <span className="eyebrow">Контакты</span>
           <h1 className="mt-5 max-w-[16ch] text-[clamp(38px,5vw,54px)]">Расскажите о задаче</h1>
           <p className="mt-6 max-w-[44ch] text-[18px] text-subtle">
-            Отвечаем в течение [N] часов. Разбор задачи и предварительная оценка — бесплатно.
+            Отвечаем в течение 24 часов. Разбор задачи и предварительная оценка — бесплатно.
           </p>
           <div className="mt-10 space-y-4">
             <div className="card-n !p-5">
