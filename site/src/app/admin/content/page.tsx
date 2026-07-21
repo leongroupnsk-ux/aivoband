@@ -29,7 +29,11 @@ export default async function AdminContentPage() {
         </div>
       </header>
 
-      <ContentEditor initialCases={getCases()} initialSolutions={getSolutions()} />
+      <ContentEditor
+        initialCases={getCases()}
+        initialSolutions={getSolutions()}
+        solutionOptions={getSolutions().map((s) => ({ slug: s.slug, name: s.name }))}
+      />
     </div>
   );
 }
