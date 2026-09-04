@@ -25,7 +25,7 @@ export default function SolutionsPage() {
           {solutions.map((s, i) => (
             <Reveal key={s.slug} delay={i * 80}>
               <Link href={`/solutions/${s.slug}`} className="card-n flex h-full min-h-52 flex-col gap-4" data-glow={s.glow}>
-                <span className="grid size-13 place-items-center rounded-full border border-primary-l/30 bg-gradient-to-br from-primary/20 to-magenta/15 text-[22px]" aria-hidden>
+                <span className="grid size-13 place-items-center rounded-full border border-primary-l/30 bg-white/[0.04] text-[22px]" aria-hidden>
                   {s.icon}
                 </span>
                 <h2 className="font-display text-[20px] font-semibold">{s.name}</h2>

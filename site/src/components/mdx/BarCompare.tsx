@@ -27,7 +27,7 @@ export default function BarCompare({
   const fmt = (n: number) => `${n.toLocaleString("ru-RU")}${unit ? " " + unit : ""}`;
 
   return (
-    <figure className="my-8 rounded-[16px] border border-line bg-white/60 p-6">
+    <figure className="my-8 rounded-[16px] border border-line bg-white/[0.03] p-6">
       <div className="flex flex-col gap-6">
         {rows.map((r) => {
           const improved = betterIs === "less" ? r.after < r.before : r.after > r.before;
@@ -37,21 +37,21 @@ export default function BarCompare({
                 <span className="text-[15px] font-medium">{r.label}</span>
                 <span className="font-mono text-[13px] text-mutedc">
                   {fmt(r.before)} <span aria-hidden>→</span>{" "}
-                  <b className={improved ? "text-primary-d" : "text-mutedc"}>{fmt(r.after)}</b>
+                  <b className={improved ? "text-cyanb" : "text-mutedc"}>{fmt(r.after)}</b>
                 </span>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2.5">
                   <span className="w-14 shrink-0 font-mono text-[11px] uppercase text-mutedc">было</span>
-                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-line/60">
-                    <div className="h-full rounded-full bg-mutedc/40" style={{ width: `${(r.before / max) * 100}%` }} />
+                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full rounded-full bg-white/25" style={{ width: `${(r.before / max) * 100}%` }} />
                   </div>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <span className="w-14 shrink-0 font-mono text-[11px] uppercase text-mutedc">стало</span>
-                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-line/60">
+                  <div className="h-3 flex-1 overflow-hidden rounded-full bg-white/10">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-primary to-magenta"
+                      className="h-full rounded-full bg-primary"
                       style={{ width: `${(r.after / max) * 100}%` }}
                     />
                   </div>

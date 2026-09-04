@@ -39,7 +39,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(900px 500px at 18% 30%, rgba(99,102,241,.16), transparent 60%), radial-gradient(700px 460px at 85% 70%, rgba(236,72,153,.10), transparent 60%), linear-gradient(180deg, transparent 55%, #0d0a22)",
+              "radial-gradient(900px 500px at 18% 30%, rgba(128,82,255,.18), transparent 60%), radial-gradient(700px 460px at 85% 70%, rgba(255,184,41,.06), transparent 60%), linear-gradient(180deg, transparent 55%, #000000)",
           }}
         />
         <div className="container-site relative z-10 py-24">
@@ -48,7 +48,7 @@ export default function Home() {
             Внедряем ИИ-
             <TypeSwap
               words={["ассистентов", "продажников", "консультантов", "RAG-системы"]}
-              className="bg-gradient-to-r from-cyanb to-primary-l bg-clip-text text-transparent"
+              className="text-primary-l"
             />
             , которые отвечают точно
           </h1>
@@ -60,7 +60,7 @@ export default function Home() {
             <Magnetic><Link href="/solutions" className="btn btn-secondary">Смотреть решения</Link></Magnetic>
           </div>
           <div className="mt-11 inline-flex items-center gap-2.5 rounded-full border border-primary-l/20 px-4 py-2 font-mono text-[13px] text-subtle">
-            <span className="size-1.5 rounded-full bg-cyanb shadow-[0_0_12px_#22d3ee]" />
+            <span className="size-1.5 rounded-full bg-cyanb shadow-[0_0_12px_#ffb829]" />
             172 проекта · работаем на ваших данных
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function Home() {
             {solutions.map((s, i) => (
               <Reveal key={s.slug} delay={i * 80}>
                 <Link href={`/solutions/${s.slug}`} className="card-n flex h-full min-h-52 flex-col gap-4" data-glow={s.glow}>
-                  <span className="grid size-13 place-items-center rounded-full border border-primary-l/30 bg-gradient-to-br from-primary/20 to-magenta/15 text-[22px]" aria-hidden>
+                  <span className="grid size-13 place-items-center rounded-full border border-primary-l/30 bg-white/[0.04] text-[22px]" aria-hidden>
                     {s.icon}
                   </span>
                   <h3 className="text-[20px]">{s.name}</h3>

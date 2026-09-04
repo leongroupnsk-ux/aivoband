@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit, Instrument_Sans, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import { SiteChromeTop, SiteChromeBottom } from "@/components/SiteChrome";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin", "latin-ext"],
-});
-
-const instrument = Instrument_Sans({
-  variable: "--font-instrument",
-  subsets: ["latin", "latin-ext"],
+// Референс DESIGN.md указывает Inter как замену PPNeueMontreal.
+// Переменный шрифт (все веса 200–700), с кириллицей — заодно ушла старая
+// проблема: у Outfit кириллицы не было.
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
 const geistMono = Geist_Mono({
@@ -43,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="ru"
-      className={`${outfit.variable} ${instrument.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <SiteChromeTop />

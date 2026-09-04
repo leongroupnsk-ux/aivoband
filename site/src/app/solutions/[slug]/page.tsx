@@ -49,7 +49,7 @@ export default async function SolutionPage({
         className="relative overflow-hidden py-20"
         style={{
           background:
-            "radial-gradient(800px 420px at 80% 20%, rgba(99,102,241,.20), transparent 65%), radial-gradient(500px 300px at 15% 85%, rgba(34,211,238,.08), transparent 60%)",
+            "radial-gradient(800px 420px at 80% 20%, rgba(128,82,255,.20), transparent 65%), radial-gradient(500px 300px at 15% 85%, rgba(128,82,255,.06), transparent 60%)",
         }}
       >
         <div className="container-site">
@@ -104,7 +104,7 @@ export default async function SolutionPage({
             <ul className="flex flex-col gap-3.5">
               {s.includes.map((item) => (
                 <li key={item} className="flex items-start gap-3.5 text-[16px]">
-                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border border-primary/35 bg-gradient-to-br from-cyanb/20 to-primary/20 text-xs text-primary-d" aria-hidden>✓</span>
+                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/15 text-xs text-primary-l" aria-hidden>✓</span>
                   {item}
                 </li>
               ))}

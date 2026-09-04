@@ -18,7 +18,7 @@ export default function Timeline({ items }: { items: Step[] | string }) {
           )}
           <span
             aria-hidden
-            className="z-10 grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-magenta font-mono text-[13px] font-bold text-white"
+            className="z-10 grid size-8 shrink-0 place-items-center rounded-full bg-primary font-mono text-[13px] font-bold text-white"
           >
             {i + 1}
           </span>

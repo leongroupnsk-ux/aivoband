@@ -1,55 +1,65 @@
 @import "tailwindcss";
 
-/* ============ Дизайн-токены Nebula (ТЗ §5, источник: ../design/tokens.css) ============ */
+/* ============ Дизайн-токены (референс DESIGN.md — «Dala», dark void) ============
+   Чёрный void как основная поверхность, единый фиолетовый акцент Electric Iris,
+   янтарь для эмфазиса, сверхлёгкий текст, минимум рамок и никаких теней. */
 @theme {
-  --color-ink: #0d0a22;
-  --color-ink2: #1e1a4a;
-  --color-paper: #f6f8fc;
-  --color-body: #14112e;
-  /* темнее, чем --muted из брендборда (#64748B): контраст ≥4.5:1 на --paper (WCAG AA, ТЗ §11) */
-  --color-mutedc: #475569;
-  --color-line: #e6e9f2;
-  --color-subtle: #b7b3d8;
+  --color-void: #000000;
+  --color-ink: #000000;      /* фон страницы = void */
+  --color-ink2: #101015;     /* едва заметная поверхность: только поля ввода и админка */
+  --color-paper: #000000;    /* «светлые» секции статей теперь тоже void — светлой темы больше нет */
+  --color-body: #ffffff;     /* bone white — основной текст */
+  --color-mutedc: #9a9a9a;   /* ash gray — вторичный текст */
+  --color-line: rgba(255, 255, 255, 0.1); /* хайрлайн-разделители вместо рамок */
+  --color-subtle: #9a9a9a;   /* ash */
+  --color-silver: #bdbdbd;   /* silver mist — третичный текст */
 
-  --color-primary: #6366f1;
-  --color-primary-l: #a5b4fc;
-  --color-primary-d: #4338ca;
-  --color-magenta: #ec4899;
-  --color-magenta-l: #f472b6;
-  --color-cyanb: #22d3ee;
-  --color-cyanb-l: #67e8f9;
+  /* единый фиолетовый акцент */
+  --color-primary: #8052ff;   /* Electric Iris */
+  --color-primary-l: #a894ff;
+  --color-primary-d: #8052ff;
+  /* вторичный спектр — используется в частицах и точечно */
+  --color-magenta: #15846e;   /* Deep Verdant (teal) */
+  --color-magenta-l: #1fae93;
+  --color-cyanb: #ffb829;     /* Saffron Spark — эмфазис, надзаголовки, ссылки */
+  --color-cyanb-l: #ffc95c;
 
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-error: #dc2626;
+  --color-success: #15846e;
+  --color-warning: #ffb829;
+  --color-error: #ff5c6c;
 
-  --font-display: var(--font-outfit), system-ui, sans-serif;
-  --font-sans: var(--font-instrument), system-ui, sans-serif;
+  --font-display: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --radius-card: 16px;
-  --shadow-card: 0 12px 40px rgba(13, 10, 34, 0.1);
+  --radius-card: 24px;
+  --shadow-card: none;
 }
 
 /* ============ база ============ */
 body {
-  background: var(--color-ink);
-  color: #fff;
+  background: var(--color-void);
+  color: var(--color-body);
   font-family: var(--font-sans);
-  font-size: 17px;
+  font-size: 18px;
+  font-weight: 300;               /* сверхлёгкий body — подпись Dala (200 слишком тонок для кириллицы) */
   line-height: 1.55;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
 }
 
+/* заголовки: вес 400 (не bold), иерархия через масштаб и плотный трекинг */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  line-height: 1.12;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
   text-wrap: balance;
-  font-weight: 600;
 }
+h3, h4 { letter-spacing: -0.02em; }
 
 .container-site {
-  max-width: 1240px;
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: clamp(24px, 6vw, 80px);
 }
@@ -57,10 +67,12 @@ h1, h2, h3, h4 {
 .section-y { padding-block: clamp(72px, 10vw, 128px); }
 
 /* ============ компоненты ============ */
+/* надзаголовок: янтарный, uppercase, тонкий трекинг */
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-cyanb);
   display: inline-flex;
@@ -68,7 +80,6 @@ h1, h2, h3, h4 {
   align-items: center;
 }
 .eyebrow::before { content: ""; width: 22px; height: 1px; background: currentColor; }
-.light .eyebrow { color: var(--color-primary-d); }
 
 .btn {
   display: inline-flex;
@@ -76,108 +87,115 @@ h1, h2, h3, h4 {
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 15.5px;
-  padding: 15px 30px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 15px 26px;
   border-radius: 999px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
-.btn:focus-visible { outline: 2px solid var(--color-cyanb); outline-offset: 3px; }
-.btn-primary {
-  background: linear-gradient(135deg, #6366f1, #ec4899);
-  color: #fff;
-  box-shadow: 0 8px 28px rgba(120, 80, 220, 0.35);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(150, 80, 220, 0.5); }
-.btn-secondary { border: 1.5px solid rgba(165, 180, 252, 0.4); color: #fff; }
-.btn-secondary:hover { border-color: var(--color-primary-l); box-shadow: 0 0 48px rgba(99, 102, 241, 0.35); }
-.light .btn-secondary { color: var(--color-primary-d); border-color: rgba(99, 102, 241, 0.45); }
-.btn-sm { padding: 11px 22px; font-size: 14px; }
+.btn:focus-visible { outline: 2px solid var(--color-primary-l); outline-offset: 3px; }
+/* единственная заливка — фиолетовый пилл, без градиента и без тени */
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: #9069ff; transform: translateY(-1px); }
+/* вторичная — призрачная, тонкий контур */
+.btn-secondary { border: 1px solid rgba(255, 255, 255, 0.16); color: #fff; }
+.btn-secondary:hover { border-color: rgba(255, 255, 255, 0.5); }
+.btn-sm { padding: 11px 20px; font-size: 13px; }
 
+/* карточка: плоская, почти невидимый хайрлайн вместо рамки/тени/градиента.
+   Отклонение от референса (там «нет карточек») ради читаемости сеток и админки. */
 .card-n {
-  background: linear-gradient(180deg, rgba(30, 26, 74, 0.75), rgba(30, 26, 74, 0.35));
-  border: 1px solid rgba(165, 180, 252, 0.14);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
   padding: 28px;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  transition: border-color 0.22s ease, transform 0.22s ease;
 }
-.card-n:hover { transform: translateY(-6px); }
-.card-n[data-glow="indigo"]:hover { border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 0 48px rgba(99, 102, 241, 0.35); }
-.card-n[data-glow="cyan"]:hover { border-color: rgba(34, 211, 238, 0.5); box-shadow: 0 0 48px rgba(34, 211, 238, 0.28); }
-.card-n[data-glow="magenta"]:hover { border-color: rgba(236, 72, 153, 0.5); box-shadow: 0 0 48px rgba(236, 72, 153, 0.3); }
-.light .card-n { background: #fff; border-color: var(--color-line); box-shadow: var(--shadow-card); }
+.card-n:hover { transform: translateY(-4px); border-color: rgba(128, 82, 255, 0.55); }
+.card-n[data-glow]:hover { border-color: rgba(128, 82, 255, 0.55); }
 
 .tag {
   font-family: var(--font-mono);
   font-size: 12px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(165, 180, 252, 0.3);
-  color: var(--color-primary-l);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--color-silver);
   white-space: nowrap;
 }
-.light .tag { color: var(--color-primary-d); border-color: rgba(99, 102, 241, 0.3); }
 
+/* «grad-text» больше не градиент (Dala: градиентов в UI нет) — плоский янтарь для эмфазиса */
 .grad-text {
-  background: linear-gradient(90deg, #6366f1, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: none;
+  color: var(--color-cyanb);
 }
 
-/* светлые секции «сэндвича» */
-.light { background: var(--color-paper); color: var(--color-body); }
+/* класс .light больше не инвертирует в светлую тему — везде void */
+.light { background: var(--color-void); color: var(--color-body); }
 
 /* инпуты форм */
 .field {
   width: 100%;
-  border: 1px solid rgba(165, 180, 252, 0.25);
-  background: rgba(30, 26, 74, 0.4);
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
   padding: 13px 16px;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 300;
   color: #fff;
 }
-/* Tailwind в своём сбросе ставит полям ввода color: inherit, а у body белый текст.
-   Из-за этого поля СТОРОННИХ виджетов (чат aivochat.ru) получали белый текст на
-   белом фоне — пользователь не видел, что печатает. Задаём полям читаемый цвет
-   по умолчанию; наши собственные поля перекрывают его классом .field выше. */
-input, textarea, select { color: var(--color-body); }
+/* Внешние виджеты (чат aivochat.ru) со светлым фоном: тёмный текст по умолчанию,
+   иначе белый на белом. Наши поля перекрывают классом .field ниже. */
+input, textarea, select { color: #14141a; }
 .field { color: #fff; }
 
-.field::placeholder { color: var(--color-subtle); }
+.field::placeholder { color: var(--color-mutedc); }
 .field:focus { outline: 2px solid var(--color-primary); outline-offset: 0; border-color: transparent; }
 .field[aria-invalid="true"] { border-color: var(--color-error); }
 
 /* логобар */
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-/* ============ типографика статьи (MDX, ТЗ §4.5) ============ */
-.prose-aivo { font-size: 17.5px; line-height: 1.7; }
+/* ============ типографика статьи (MDX) — теперь на чёрном ============ */
+.prose-aivo { font-size: 18px; font-weight: 300; line-height: 1.75; color: var(--color-silver); }
 .prose-aivo h2 {
-  font-size: 28px;
-  margin: 44px 0 16px;
+  font-size: clamp(28px, 3.4vw, 42px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin: 52px 0 18px;
   scroll-margin-top: 96px;
 }
+.prose-aivo h3 { color: #fff; font-weight: 500; margin-top: 28px; }
 .prose-aivo p { margin: 0 0 18px; }
+.prose-aivo strong, .prose-aivo b { color: #fff; font-weight: 600; }
 .prose-aivo a:not(.btn) {
-  color: var(--color-primary-d);
+  color: var(--color-cyanb);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .prose-aivo ul, .prose-aivo ol { margin: 0 0 18px; padding-left: 24px; }
 .prose-aivo li { margin-bottom: 8px; }
 .prose-aivo blockquote {
-  border-left: 3px solid var(--color-primary-l);
+  border-left: 2px solid var(--color-primary);
   margin: 0 0 18px;
   padding: 4px 0 4px 20px;
   color: var(--color-mutedc);
 }
-.prose-aivo table { border-collapse: collapse; margin: 0 0 18px; width: 100%; font-size: 15px; }
-.prose-aivo th, .prose-aivo td { border: 1px solid var(--color-line); padding: 8px 12px; text-align: left; }
+.prose-aivo table { border-collapse: collapse; margin: 0 0 22px; width: 100%; font-size: 15px; }
+.prose-aivo th, .prose-aivo td {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 9px 13px;
+  text-align: left;
+  color: var(--color-silver);
+}
+.prose-aivo th { color: #fff; font-weight: 600; background: rgba(255, 255, 255, 0.03); }
 .prose-aivo pre {
-  background: var(--color-ink) !important;
+  background: #101015 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 20px 22px;
   overflow-x: auto;
@@ -188,8 +206,8 @@ input, textarea, select { color: var(--color-body); }
 .prose-aivo :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.88em;
-  background: rgba(99, 102, 241, 0.1);
-  color: var(--color-primary-d);
+  background: rgba(128, 82, 255, 0.14);
+  color: var(--color-primary-l);
   border-radius: 6px;
   padding: 2px 6px;
 }

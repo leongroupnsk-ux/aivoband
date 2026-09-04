@@ -20,7 +20,9 @@ export default function NeuroCanvas({ className = "" }: { className?: string }) 
     const dpr = Math.min(devicePixelRatio, 2);
     let W = 0;
     let H = 0;
-    let pts: { x: number; y: number; vx: number; vy: number }[] = [];
+    // спектр частиц из референса: фиолетовый, янтарь, тил, маджента, синий
+    const PALETTE = ["#8052ff", "#ffb829", "#15846e", "#c15cff", "#4f8cff"];
+    let pts: { x: number; y: number; vx: number; vy: number; c: string }[] = [];
     const mouse = { x: -1e4, y: -1e4 };
     let raf = 0;
     let visible = true;
@@ -41,6 +43,7 @@ export default function NeuroCanvas({ className = "" }: { className?: string }) 
         y: Math.random() * H,
         vx: (Math.random() - 0.5) * 0.25 * dpr,
         vy: (Math.random() - 0.5) * 0.25 * dpr,
+        c: PALETTE[(Math.random() * PALETTE.length) | 0],
       }));
     };
 
@@ -76,7 +79,7 @@ export default function NeuroCanvas({ className = "" }: { className?: string }) 
           const b = pts[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
           if (d < max) {
-            ctx.strokeStyle = `rgba(120,120,240,${(1 - d / max) * 0.35})`;
+            ctx.strokeStyle = `rgba(128,82,255,${(1 - d / max) * 0.28})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -86,11 +89,13 @@ export default function NeuroCanvas({ className = "" }: { className?: string }) 
         }
       }
       for (const p of pts) {
-        ctx.fillStyle = "rgba(165,180,252,.85)";
+        ctx.fillStyle = p.c;
+        ctx.globalAlpha = 0.9;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.8 * dpr, 0, 7);
         ctx.fill();
       }
+      ctx.globalAlpha = 1;
     };
 
     const io = new IntersectionObserver((es) => {

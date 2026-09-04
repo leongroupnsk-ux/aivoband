@@ -11,7 +11,7 @@ export default function Callout({ type = "important", children }: { type?: strin
     <aside className="my-6 flex gap-3.5 rounded-[14px] border border-primary/25 bg-primary/6 px-5 py-4 text-[15.5px]">
       <span
         aria-hidden
-        className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-magenta text-[13px] font-bold text-white"
+        className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-primary text-[13px] font-bold text-white"
       >
         !
       </span>

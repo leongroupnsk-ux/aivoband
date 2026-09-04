@@ -20,7 +20,7 @@ export default function ArticleProgress() {
 
   return (
     <div className="fixed inset-x-0 top-0 z-[60] h-[3px]" aria-hidden>
-      <div ref={ref} className="h-full w-0 bg-gradient-to-r from-primary to-magenta" />
+      <div ref={ref} className="h-full w-0 bg-primary" />
     </div>
   );
 }

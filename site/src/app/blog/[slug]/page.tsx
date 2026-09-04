@@ -84,7 +84,7 @@ export default async function ArticlePage({
         <h1 className="mt-4 text-[clamp(32px,4.4vw,48px)]">{post.title}</h1>
         <p className="mt-4 max-w-[58ch] text-[19px] text-mutedc">{post.excerpt}</p>
         <div className="mt-6 flex items-center gap-3.5 text-sm text-mutedc">
-          <span aria-hidden className="size-10 rounded-full bg-gradient-to-br from-primary-l to-primary-d" />
+          <span aria-hidden className="size-10 rounded-full bg-primary" />
           <span>
             <b className="text-body">{post.author}</b> · {formatDate(post.date)} · {post.readingMinutes} мин чтения
           </span>
@@ -126,7 +126,7 @@ export default async function ArticlePage({
 
           {/* автор + шеринг */}
           <footer className="mt-12 flex flex-wrap items-center gap-5 border-t border-line pt-7">
-            <span aria-hidden className="size-12 rounded-full bg-gradient-to-br from-primary-l to-primary-d" />
+            <span aria-hidden className="size-12 rounded-full bg-primary" />
             <div className="mr-auto">
               <b className="font-display">{post.author}</b>
               <p className="text-sm text-mutedc">Проектируем и внедряем ИИ-системы на данных клиентов.</p>
