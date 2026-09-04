@@ -50,14 +50,34 @@ else
   trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
 fi
 
-# 1. Какой сейчас коммит в ветке
-remote_sha=$(curl -fsS --max-time 30 \
-  "https://api.github.com/repos/$REPO/commits/$BRANCH" \
-  -H "Accept: application/vnd.github.sha" 2>/dev/null || true)
+# 1. Какой сейчас коммит в ветке.
+# Связь RU→GitHub нестабильна, а один вызов api.github.com легко флапает — поэтому
+# несколько попыток и два независимых источника (ls-remote с github.com + api).
+get_remote_sha() {
+  local sha=""
+  sha=$(git ls-remote "https://github.com/$REPO" "refs/heads/$BRANCH" 2>/dev/null | cut -f1)
+  if [ -n "$sha" ]; then echo "$sha"; return; fi
+  local a
+  for a in 1 2 3; do
+    sha=$(curl -fsS --max-time 30 \
+      "https://api.github.com/repos/$REPO/commits/$BRANCH" \
+      -H "Accept: application/vnd.github.sha" 2>/dev/null || true)
+    if [ -n "$sha" ]; then echo "$sha"; return; fi
+    sleep 3
+  done
+  echo ""
+}
+remote_sha=$(get_remote_sha)
 
 if [ -z "$remote_sha" ]; then
-  log "ошибка: не удалось получить коммит с GitHub (сеть или лимит API) — пропускаем"
-  exit 0
+  if [ "${FORCE:-0}" = "1" ]; then
+    # ручной прогон: не смогли узнать SHA, но человек явно попросил — катим свежий тарбол
+    log "SHA с GitHub не получен, но FORCE=1 — деплоим последнюю версию из тарбола"
+    remote_sha="forced-redeploy"   # не совпадёт с реальным SHA → следующий тик докатит настоящую версию
+  else
+    log "ошибка: не удалось получить коммит с GitHub (сеть/лимит API) — пропускаем, попробуем на следующем тике"
+    exit 0
+  fi
 fi
 
 current_sha=$(cat "$STATE_FILE" 2>/dev/null || echo "")
