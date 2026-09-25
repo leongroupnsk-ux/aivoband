@@ -42,26 +42,70 @@ export default function Home() {
               "radial-gradient(900px 500px at 18% 30%, rgba(128,82,255,.18), transparent 60%), radial-gradient(700px 460px at 85% 70%, rgba(255,184,41,.06), transparent 60%), linear-gradient(180deg, transparent 55%, #000000)",
           }}
         />
-        <div className="container-site relative z-10 py-24">
-          <span className="eyebrow">ИИ, который не выдумывает</span>
-          <h1 className="mt-6 max-w-[15ch] text-[clamp(44px,6vw,64px)] tracking-tight">
-            Внедряем ИИ-
-            <TypeSwap
-              words={["ассистентов", "продажников", "консультантов", "RAG-системы"]}
-              className="text-primary-l"
-            />
-            , которые отвечают точно
-          </h1>
-          <p className="mt-7 max-w-[52ch] text-[19px] text-subtle">
-            Системы на ваших данных: RAG-подход исключает выдумки, работа 24/7 разгружает команду, а код мы передаём вам в собственность.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Magnetic><Link href="/contacts" className="btn btn-primary">Обсудить проект</Link></Magnetic>
-            <Magnetic><Link href="/solutions" className="btn btn-secondary">Смотреть решения</Link></Magnetic>
+        <div className="container-site relative z-10 w-full py-24">
+          {/* Оффер на всю ширину: слева заголовок и CTA, справа — детальное УТП */}
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-7">
+              <span className="eyebrow">ИИ, который не выдумывает</span>
+              <h1 className="mt-6 text-[clamp(42px,5.4vw,72px)] tracking-tight">
+                Внедряем ИИ-
+                {/* слово и запятая — одним блоком, чтобы запятая не отрывалась на новую строку */}
+                <span className="whitespace-nowrap">
+                  <TypeSwap
+                    words={["ассистентов", "продажников", "консультантов", "RAG-системы"]}
+                    className="text-primary-l"
+                  />
+                  ,
+                </span>{" "}
+                которые отвечают точно
+              </h1>
+              <p className="mt-7 max-w-[60ch] text-[19px] text-subtle">
+                Не «умный чат-бот», а система на вашей базе знаний: она находит факт в ваших регламентах и
+                каталогах, отвечает по нему, а не выдумывает, работает круглосуточно и передаёт сложное
+                человеку. Код, данные и права остаются у вас — это не аренда.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Magnetic><Link href="/contacts" className="btn btn-primary">Обсудить проект</Link></Magnetic>
+                <Magnetic><Link href="/solutions" className="btn btn-secondary">Смотреть решения</Link></Magnetic>
+              </div>
+              <div className="mt-9 inline-flex items-center gap-2.5 rounded-full border border-primary-l/20 px-4 py-2 font-mono text-[13px] text-subtle">
+                <span className="size-1.5 rounded-full bg-cyanb shadow-[0_0_12px_#ffb829]" />
+                172 проекта · бесплатный разбор задачи · ответ в течение 24 часов
+              </div>
+            </div>
+
+            {/* УТП: чем мы отличаемся — четыре конкретных обещания */}
+            <ul className="rounded-[24px] border border-white/10 bg-black/45 p-2 backdrop-blur-sm lg:col-span-5">
+              {[
+                ["01", "Без выдумок", "RAG: ответ строится только по найденным фрагментам вашей базы и показывает источник. Не нашёл — честно говорит об этом."],
+                ["02", "Границы и эскалация", "Претензии, деньги, спорное — сразу человеку, с контекстом диалога. Ассистент знает, где заканчивается его компетенция."],
+                ["03", "Код и данные — ваши", "Репозиторий, документация и права передаём вам. Деплой в ваше облако или on-premise: данные не уходят наружу."],
+                ["04", "MVP за 2–4 недели", "Собираем на готовых блоках, а не с нуля. Сначала пилот на части данных — решение о внедрении принимаете на цифрах."],
+              ].map(([n, t, d]) => (
+                <li key={n} className="flex gap-4 rounded-[18px] px-4 py-4 transition-colors hover:bg-white/[0.04]">
+                  <span className="mt-0.5 font-mono text-[12px] text-cyanb">{n}</span>
+                  <div>
+                    <p className="text-[16px] font-medium text-white">{t}</p>
+                    <p className="mt-1 text-[14px] leading-relaxed text-subtle">{d}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="mt-11 inline-flex items-center gap-2.5 rounded-full border border-primary-l/20 px-4 py-2 font-mono text-[13px] text-subtle">
-            <span className="size-1.5 rounded-full bg-cyanb shadow-[0_0_12px_#ffb829]" />
-            172 проекта · работаем на ваших данных
+
+          {/* Полоса доказательств на всю ширину */}
+          <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 pt-8 lg:grid-cols-4">
+            {[
+              ["до 70%", "типовых обращений ассистент закрывает без человека"],
+              ["секунды", "первый ответ клиенту — ночью, в пик и в выходные"],
+              ["12 отраслей", "готовые разборы внедрения с расчётом окупаемости"],
+              ["100%", "кода, документации и данных остаётся у вас"],
+            ].map(([v, l]) => (
+              <div key={v}>
+                <div className="font-display text-[30px] font-normal tracking-tight text-white">{v}</div>
+                <p className="mt-1 max-w-[26ch] text-[13.5px] leading-snug text-subtle">{l}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
