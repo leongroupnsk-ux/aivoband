@@ -39,10 +39,17 @@ export default async function CasePage({
           <div className="flex flex-wrap gap-2.5">
             <span className="tag">{c.niche}</span>
             <span className="tag">{c.solutionName}</span>
-            {c.nda && <span className="tag opacity-60">NDA</span>}
           </div>
           <h1 className="mt-6 text-[clamp(34px,4.4vw,48px)]">{c.title}</h1>
           <p className="grad-text mt-5 font-display text-[clamp(26px,3vw,34px)] font-bold">{c.metric}</p>
+
+          {/* Честная рамка: цифры типовые, а не результат конкретного клиента */}
+          <p className="mt-6 rounded-[12px] border border-dashed border-mutedc/40 bg-mutedc/5 px-4 py-3 text-[14px] text-mutedc">
+            Кейс типовой: показываем эффект внедрения по среднеотраслевым вводным. Цифры — ориентиры
+            по нашим внедрениям и данным рынка, а не результаты конкретного клиента. Точную оценку под
+            вашу задачу даём после аудита. Подробные разборы с расчётами — в разделе{" "}
+            <Link href="/scenarios" className="underline underline-offset-2 hover:text-white">Сценарии внедрения</Link>.
+          </p>
         </div>
       </section>
 
@@ -91,7 +98,7 @@ export default async function CasePage({
           <div className="card-n" data-glow="cyan">
             <h2 className="font-display text-[26px] font-semibold">Хочу так же</h2>
             <p className="mt-3 mb-7 text-subtle">
-              Расскажите о задаче — предложим решение и оценку на основе похожих проектов.
+              Расскажите о задаче — предложим решение и посчитаем эффект уже на ваших цифрах.
             </p>
             <LeadForm presetSolution={c.solutionSlug} />
           </div>
