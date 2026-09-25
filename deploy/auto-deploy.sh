@@ -23,6 +23,17 @@ STATE_FILE="$APP_DIR/.deployed-sha"
 LOCK_FILE="/tmp/aivo-deploy.lock"
 HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:3000/}"
 
+# Токен для ПРИВАТНОГО репозитория (необязателен для публичного).
+# Кладётся на сервер в /opt/aivo/.github-token (chmod 600) или в env GITHUB_TOKEN.
+# Нужен fine-grained PAT только с правом «Contents: Read» на этот репозиторий.
+TOKEN="${GITHUB_TOKEN:-$(cat "$APP_DIR/.github-token" 2>/dev/null || true)}"
+TOKEN="$(printf '%s' "$TOKEN" | tr -d '[:space:]')"
+
+# curl к GitHub с авторизацией, если токен задан (иначе — как для публичного репо)
+gh_curl() {
+  if [ -n "$TOKEN" ]; then curl -H "Authorization: Bearer $TOKEN" "$@"; else curl "$@"; fi
+}
+
 log() { echo "$(date -Iseconds) $*"; }
 
 # Не запускаем два деплоя одновременно (сборка идёт минуты, крон тикает каждые 5).
@@ -54,12 +65,14 @@ fi
 # Связь RU→GitHub нестабильна, а один вызов api.github.com легко флапает — поэтому
 # несколько попыток и два независимых источника (ls-remote с github.com + api).
 get_remote_sha() {
-  local sha=""
-  sha=$(git ls-remote "https://github.com/$REPO" "refs/heads/$BRANCH" 2>/dev/null | cut -f1)
+  local sha="" url="https://github.com/$REPO"
+  # для приватного репо ls-remote тоже нужна авторизация
+  [ -n "$TOKEN" ] && url="https://x-access-token:${TOKEN}@github.com/$REPO"
+  sha=$(git ls-remote "$url" "refs/heads/$BRANCH" 2>/dev/null | cut -f1)
   if [ -n "$sha" ]; then echo "$sha"; return; fi
   local a
   for a in 1 2 3; do
-    sha=$(curl -fsS --max-time 30 \
+    sha=$(gh_curl -fsS --max-time 30 \
       "https://api.github.com/repos/$REPO/commits/$BRANCH" \
       -H "Accept: application/vnd.github.sha" 2>/dev/null || true)
     if [ -n "$sha" ]; then echo "$sha"; return; fi
@@ -90,10 +103,12 @@ prev_short="${current_sha:0:8}"
 log "новый коммит ${remote_sha:0:8} (было ${prev_short:-нет}) — обновляемся"
 
 # 2. Скачиваем и раскладываем. .env не входит в архив, поэтому переживает обновление.
+#    Тарбол берём через API (работает и для приватного репо с токеном, и для публичного):
+#    API отдаёт редирект на подписанную ссылку, curl -L её проходит.
 cd "$APP_DIR"
-if ! curl -fsSL --max-time 120 \
-  "https://codeload.github.com/$REPO/tar.gz/refs/heads/$BRANCH" | tar -xz --strip-components=1; then
-  log "ошибка: не удалось скачать или распаковать архив — прод не тронут"
+if ! gh_curl -fsSL --max-time 120 \
+  "https://api.github.com/repos/$REPO/tarball/$BRANCH" | tar -xz --strip-components=1; then
+  log "ошибка: не удалось скачать или распаковать архив (приватный репо без токена? см. .github-token) — прод не тронут"
   exit 1
 fi
 
